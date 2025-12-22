@@ -1,0 +1,160 @@
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/wait.h>
+
+#define BUFFER_SIZE 1024 
+#define TOKEN_DELIMITER " \t" // set of delimiters
+
+// methods enumeration
+void loop();
+char * read_line();
+char ** parse_line(char * line);
+void print_words(char ** words);
+int exec_word(char ** words);
+
+
+
+
+/* Print all the words in a list */
+void print_words(char **words) {
+    int i = 0;
+    while (words[i] != NULL) {
+        printf("%s\n", words[i]);
+        i++;
+    }
+}
+
+/* Read a line from the standard input */
+char * read_line() {
+    int buffer_size = BUFFER_SIZE ;
+    int position = 0 ;
+
+    char * buffer = malloc(sizeof(char) * buffer_size) ;
+
+    char c ;
+
+    // no space for allocation
+    if (!buffer) {
+        fprintf(stderr, "error: Allocation error\n");
+        exit(EXIT_FAILURE);
+    }
+
+    while (1) {
+
+        c = getchar() ;
+
+        // enf of line
+        if (c == EOF || c == '\n') {
+            buffer[position] = '\0';
+            return buffer ;
+        } 
+        
+        buffer[position++] = c ;
+
+        if (position > buffer_size) {
+
+            buffer_size += BUFFER_SIZE ;
+            buffer = realloc(buffer,buffer_size);
+
+            // no space for allocation
+            if (!buffer) {
+                fprintf(stderr, "error: Allocation error\n");
+                exit(EXIT_FAILURE);
+            }
+        }
+    }
+}
+
+/* Parse a line into tokens */
+char ** parse_line( char * line) {
+    int buffer_size = BUFFER_SIZE ;
+    int position = 0 ;
+
+    char * t ;
+    char ** tokens = malloc(sizeof(char*) * buffer_size);
+
+    if (!tokens) {
+        fprintf(stderr, "error: Allocation error\n");
+        exit(EXIT_FAILURE);
+    }
+
+    t = strtok(line, TOKEN_DELIMITER) ;
+    while (t != NULL) {
+        tokens[position++] = t ;
+        
+        if (position > buffer_size) {
+            buffer_size += BUFFER_SIZE ;
+            tokens = realloc(tokens, buffer_size);
+
+            if (!tokens) {
+                fprintf(stderr, "error: Allocation error\n");
+                exit(EXIT_FAILURE);
+            }
+        }
+
+        t = strtok(NULL, TOKEN_DELIMITER);
+
+    }
+
+    // to ensure the end of the word
+    tokens[position] = NULL ;
+    return tokens ;
+
+}
+
+/* Execute a command */
+int exec_words(char ** words) {
+    pid_t child_pid ;
+    int exec_status ;
+
+    child_pid = fork() ;
+
+    if (child_pid == 0) {
+        if (execvp(words[0], words) < 0) {
+            printf("error: command doesn't exist : %s\n", words[0]);
+            exit(EXIT_FAILURE);
+        }
+    } else if (child_pid == -1) {
+        fprintf(stderr, "error: process creation error\n");
+        exit(EXIT_FAILURE);
+    } else {
+        waitpid(child_pid, &exec_status, 0) ; // 0 since we don't need any option for now
+    }
+
+    return 1 ;
+    
+}
+
+/* Loop to read and execute commands */
+void loop() {
+    char * line ;
+    char ** words ; // parsed line
+    int status = 1 ;
+    
+
+    int w_size = 1024 ;
+    char working_directory[w_size] ;
+
+
+    do {
+        
+        getcwd(working_directory, w_size) ;
+        printf("(%s)\n-->",working_directory);
+        line = read_line() ;
+        words = parse_line(line) ;
+        //print_words(words) ;
+        status = exec_words(words);
+        free(line);
+        free(words);
+
+    } while (status == 1) ;
+
+}
+
+int main() {
+    loop();
+    return 0;
+}
