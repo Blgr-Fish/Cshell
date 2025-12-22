@@ -15,6 +15,10 @@ char ** parse_line(char * line);
 void print_words(char ** words);
 int exec_word(char ** words);
 
+// built-in methods
+int exec_exit(char ** args);
+int exec_cd(char ** args);
+
 
 
 
@@ -54,7 +58,7 @@ char * read_line() {
         
         buffer[position++] = c ;
 
-        if (position > buffer_size) {
+        if (position >= buffer_size) {
 
             buffer_size += BUFFER_SIZE ;
             buffer = realloc(buffer,buffer_size);
@@ -85,7 +89,7 @@ char ** parse_line( char * line) {
     while (t != NULL) {
         tokens[position++] = t ;
         
-        if (position > buffer_size) {
+        if (position >= buffer_size) {
             buffer_size += BUFFER_SIZE ;
             tokens = realloc(tokens, buffer_size);
 
@@ -110,6 +114,13 @@ int exec_words(char ** words) {
     pid_t child_pid ;
     int exec_status ;
 
+    if (strcmp(words[0],"exit") == 0) {
+        return exec_exit(words);
+    }
+    if (strcmp(words[0],"cd") == 0) {
+        return exec_cd(words);
+    }
+
     child_pid = fork() ;
 
     if (child_pid == 0) {
@@ -125,7 +136,29 @@ int exec_words(char ** words) {
     }
 
     return 1 ;
-    
+
+}
+
+int exec_exit(char ** words) {
+    return 0 ;
+}
+
+int exec_cd(char ** words) {
+
+    int status = 1 ;
+
+    if (words[1] == NULL || strcmp(words[1], " ") == 0 || strcmp(words[1], "~") == 0) {
+        words[1] = getenv("HOME") ;
+    }
+
+
+    if (chdir(words[1]) != 0) {
+        printf("error: directory doesn't exist : %s\n", words[1]);
+        status = -1 ;
+    }
+
+
+    return status ;
 }
 
 /* Loop to read and execute commands */
@@ -142,15 +175,17 @@ void loop() {
     do {
         
         getcwd(working_directory, w_size) ;
-        printf("(%s)\n-->",working_directory);
+        printf("\n╭─(%s)\n╰─>",working_directory);
         line = read_line() ;
         words = parse_line(line) ;
         //print_words(words) ;
-        status = exec_words(words);
+        if (words[0] != NULL) {
+            status = exec_words(words);
+        }
         free(line);
         free(words);
 
-    } while (status == 1) ;
+    } while (status != 0) ;
 
 }
 
