@@ -1,7 +1,7 @@
-TARGET = main.out
+TARGET = bin/main.out
 
 
-SRCS = $(wildcard *.c)
+SRCS = $(wildcard src/*.c)
 
 CC = gcc
 CFLAGS = -Wall -Wextra -g
