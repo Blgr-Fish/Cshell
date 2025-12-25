@@ -125,18 +125,19 @@ char * add_spaces(char * buffer) {
         } else if (buffer[i] == '>') {
             clean_line[ci++] = ' ';
             clean_line[ci++] = '>';
-            clean_line[ci++] = ' ';
-            i++;                  
+            clean_line[ci++] = ' ';                
         } else if (buffer[i] == '<') {
             clean_line[ci++] = ' ';
             clean_line[ci++] = '<';
-            clean_line[ci++] = ' ';
-            i++;                 
+            clean_line[ci++] = ' ';                 
         } else if (buffer[i] == '&') {
             clean_line[ci++] = ' ';
             clean_line[ci++] = '&';
+            clean_line[ci++] = ' ';                 
+        } else if (buffer[i] == '|') {
             clean_line[ci++] = ' ';
-            i++;                  
+            clean_line[ci++] = '|';
+            clean_line[ci++] = ' ';                 
         } else {
             clean_line[ci++] = buffer[i];
         }

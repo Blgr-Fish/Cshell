@@ -7,8 +7,8 @@ int handle_command(Line words, int last_status){
 
     // executing all the commands with their args if they have some
     for (int tcmds = 0 ; tcmds < words.totalcmds ; ++tcmds) {
-        
-        if (tcmds == 0) {
+
+        if (words.totalcmds == 1 && (words.cmds[tcmds].ended != REDIRECT_OUT || words.cmds[tcmds].ended != REDIRECT_OUT_APPEND)) {
             shell_status = exec_word(words.cmds[tcmds]);
         } else {
             switch (words.cmds[tcmds-1].ended) {
@@ -26,13 +26,32 @@ int handle_command(Line words, int last_status){
                 case PIPE:
                     // TODO 
                     break;
-                case redirect_in:
+                case REDIRECT_IN: // <
                     // TODO 
                     break;
-                case redirect_out:
-                    // TODO 
+                case REDIRECT_OUT:
+
+                printf("value ended : %d\n", words.cmds[tcmds].ended );
+                printf("total command : %d\n", words.totalcmds);
+
+                    if (shell_status == SHELL_VALID) {
+                            int  stdout_bk = dup(fileno(stdout));
+                            FILE * inputFile = fopen(words.cmds[tcmds].argv[0], "w") ;
+                            if ( !inputFile ) {
+                                printf( "error; file not found for redirection");
+                                shell_status = SHELL_ERROR ;
+                            } else {
+                                dup2(fileno(inputFile), fileno(stdout));
+                                
+                                shell_status = exec_word(words.cmds[tcmds-1]);
+                                
+                                dup2(stdout_bk, fileno(stdout));
+                                close(stdout_bk);
+                            }
+                        }
+
                     break;
-                case redirect_out_append:
+                case REDIRECT_OUT_APPEND:
                     // TODO 
                     break;
                 default:

@@ -24,15 +24,17 @@ Line parse_line( char * line) {
     while (t != NULL) {
 
 
-        if (strcmp(t, ";") == 0 || strcmp(t, "&&") == 0 || strcmp(t,"||") == 0) {
+        if (strcmp(t, ";") == 0 || strcmp(t, "&&") == 0 || strcmp(t,"||") == 0 || strcmp(t,">") == 0) {
 
             if (strcmp(t, "&&") == 0) {
                 pline.cmds[pline.totalcmds].ended = AND_AND ;// && code
             } else if(strcmp(t,"||") == 0) {
                 pline.cmds[pline.totalcmds].ended = OR_OR ;
+            } else if(strcmp(t,">") == 0) {
+                pline.cmds[pline.totalcmds].ended = REDIRECT_OUT ;
             }
              else {
-                pline.cmds[pline.totalcmds].ended = SEMICOLON ; // don't use since 0
+                pline.cmds[pline.totalcmds].ended = SEMICOLON ; 
             }
             
             // add a NULL to the command to finish it

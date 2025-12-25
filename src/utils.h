@@ -24,9 +24,9 @@
 #define OR_OR 2 // execute next command after || if previous failed
 #define PIPE 3 // execute next command with input from previous command
 
-#define redirect_in 4 // <
-#define redirect_out 5 // >
-#define redirect_out_append 6 // >>
+#define REDIRECT_IN 4 // <
+#define REDIRECT_OUT 5 // >
+#define REDIRECT_OUT_APPEND 6 // >>
 
 #define AND_BACKGROUND 1 // for background processes &
 
