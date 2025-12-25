@@ -30,29 +30,10 @@ int handle_command(Line words, int last_status){
                     // TODO 
                     break;
                 case REDIRECT_OUT:
-
-                printf("value ended : %d\n", words.cmds[tcmds].ended );
-                printf("total command : %d\n", words.totalcmds);
-
-                    if (shell_status == SHELL_VALID) {
-                            int  stdout_bk = dup(fileno(stdout));
-                            FILE * inputFile = fopen(words.cmds[tcmds].argv[0], "w") ;
-                            if ( !inputFile ) {
-                                printf( "error; file not found for redirection");
-                                shell_status = SHELL_ERROR ;
-                            } else {
-                                dup2(fileno(inputFile), fileno(stdout));
-                                
-                                shell_status = exec_word(words.cmds[tcmds-1]);
-                                
-                                dup2(stdout_bk, fileno(stdout));
-                                close(stdout_bk);
-                            }
-                        }
-
+                    shell_status = write_to_file("w", shell_status, words, tcmds);
                     break;
                 case REDIRECT_OUT_APPEND:
-                    // TODO 
+                    shell_status = write_to_file("a", shell_status, words, tcmds);
                     break;
                 default:
                     // nothing
@@ -155,4 +136,25 @@ int exec_history() {
 
 
     return SHELL_VALID;
+}
+
+
+int  write_to_file(char * type, int shell_status, Line words, int tcmds) {
+    if (shell_status == SHELL_VALID) {
+        int  stdout_bk = dup(fileno(stdout));
+        FILE * inputFile = fopen(words.cmds[tcmds].argv[0], type) ;
+        if ( !inputFile ) {
+            printf( "error; file not found for redirection");
+            shell_status = SHELL_ERROR ;
+        } else {
+            dup2(fileno(inputFile), fileno(stdout));
+                                
+            shell_status = exec_word(words.cmds[tcmds-1]);
+                                
+            dup2(stdout_bk, fileno(stdout));
+            close(stdout_bk);
+        }
+    }
+
+    return shell_status ;
 }

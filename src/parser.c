@@ -24,7 +24,7 @@ Line parse_line( char * line) {
     while (t != NULL) {
 
 
-        if (strcmp(t, ";") == 0 || strcmp(t, "&&") == 0 || strcmp(t,"||") == 0 || strcmp(t,">") == 0) {
+        if (strcmp(t, ";") == 0 || strcmp(t, "&&") == 0 || strcmp(t,"||") == 0 || strcmp(t,">") == 0 || strcmp(t,">>") == 0) {
 
             if (strcmp(t, "&&") == 0) {
                 pline.cmds[pline.totalcmds].ended = AND_AND ;// && code
@@ -32,8 +32,9 @@ Line parse_line( char * line) {
                 pline.cmds[pline.totalcmds].ended = OR_OR ;
             } else if(strcmp(t,">") == 0) {
                 pline.cmds[pline.totalcmds].ended = REDIRECT_OUT ;
-            }
-             else {
+            } else if(strcmp(t,">>") == 0) {
+                pline.cmds[pline.totalcmds].ended = REDIRECT_OUT_APPEND ;
+            } else {
                 pline.cmds[pline.totalcmds].ended = SEMICOLON ; 
             }
             
