@@ -109,7 +109,34 @@ char * add_spaces(char * buffer) {
             clean_line[ci++] = '|';
             clean_line[ci++] = '|';
             clean_line[ci++] = ' ';
-            i++;                    // same
+            i++;                    
+        } else if (buffer[i] == '>' && buffer[i+1] == '>') {
+            clean_line[ci++] = ' ';
+            clean_line[ci++] = '>';
+            clean_line[ci++] = '>';
+            clean_line[ci++] = ' ';
+            i++;                   
+        } else if (buffer[i] == '<' && buffer[i+1] == '<') {
+            clean_line[ci++] = ' ';
+            clean_line[ci++] = '<';
+            clean_line[ci++] = '<';
+            clean_line[ci++] = ' ';
+            i++;                   
+        } else if (buffer[i] == '>') {
+            clean_line[ci++] = ' ';
+            clean_line[ci++] = '>';
+            clean_line[ci++] = ' ';
+            i++;                  
+        } else if (buffer[i] == '<') {
+            clean_line[ci++] = ' ';
+            clean_line[ci++] = '<';
+            clean_line[ci++] = ' ';
+            i++;                 
+        } else if (buffer[i] == '&') {
+            clean_line[ci++] = ' ';
+            clean_line[ci++] = '&';
+            clean_line[ci++] = ' ';
+            i++;                  
         } else {
             clean_line[ci++] = buffer[i];
         }

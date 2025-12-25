@@ -16,8 +16,19 @@
 #define SHELL_UNKOWN_COMMAND 127
 #define SHELL_EXIT 256
 
-#define HISTORY_FILE ".cshell_history"
+#define HISTORY_FILE ".rshell_history"
+#define SHELL_NAME "ROGERLUX"
 
+#define SEMICOLON 0 // execute next command after ;
+#define AND_AND 1 // execute next command after && if previous succeeded
+#define OR_OR 2 // execute next command after || if previous failed
+#define PIPE 3 // execute next command with input from previous command
+
+#define redirect_in 4 // <
+#define redirect_out 5 // >
+#define redirect_out_append 6 // >>
+
+#define AND_BACKGROUND 1 // for background processes &
 
 
 
@@ -25,7 +36,7 @@
 /* command representation (multiple arguments) */
 typedef struct  {
     char ** argv;
-    int ended; // 1 if &&, 0 else for now
+    int ended; 
 } Command ;
 
 /* line of multiple commands, needed for ; usage & maybe more after */

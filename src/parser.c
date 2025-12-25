@@ -24,12 +24,15 @@ Line parse_line( char * line) {
     while (t != NULL) {
 
 
-        if (strcmp(t, ";") == 0 || strcmp(t, "&&") == 0) {
+        if (strcmp(t, ";") == 0 || strcmp(t, "&&") == 0 || strcmp(t,"||") == 0) {
 
             if (strcmp(t, "&&") == 0) {
-                pline.cmds[pline.totalcmds].ended = 1 ;// && code
-            } else {
-                pline.cmds[pline.totalcmds].ended = 0 ; // don't use since 0
+                pline.cmds[pline.totalcmds].ended = AND_AND ;// && code
+            } else if(strcmp(t,"||") == 0) {
+                pline.cmds[pline.totalcmds].ended = OR_OR ;
+            }
+             else {
+                pline.cmds[pline.totalcmds].ended = SEMICOLON ; // don't use since 0
             }
             
             // add a NULL to the command to finish it
@@ -74,7 +77,7 @@ Line parse_line( char * line) {
 
     // to ensure the end of the word
     pline.cmds[pline.totalcmds].argv[position] = NULL ;
-    pline.cmds[pline.totalcmds].ended = 0 ; // don't use since 0
+    pline.cmds[pline.totalcmds].ended = SEMICOLON ; 
     pline.totalcmds++;
     return pline ;
 

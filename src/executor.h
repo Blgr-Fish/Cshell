@@ -12,5 +12,6 @@ int exec_exit();
 int exec_cd(char ** args);
 int exec_history();
 void replace_tild(char ** argv);
+int handle_command(Line line, int last_status);
 
 #endif

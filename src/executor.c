@@ -1,6 +1,49 @@
 #include "executor.h"
 
 
+int handle_command(Line words, int last_status){
+
+    int shell_status = last_status ;
+
+    // executing all the commands with their args if they have some
+    for (int tcmds = 0 ; tcmds < words.totalcmds ; ++tcmds) {
+        
+        if (tcmds == 0) {
+            shell_status = exec_word(words.cmds[tcmds]);
+        } else {
+            switch (words.cmds[tcmds-1].ended) {
+                case SEMICOLON:
+                    shell_status = exec_word(words.cmds[tcmds]);
+                    break;
+                case AND_AND:
+                    if (shell_status == SHELL_VALID)
+                        shell_status = exec_word(words.cmds[tcmds]);
+                    break;
+                case OR_OR:
+                    if (shell_status != SHELL_VALID)
+                        shell_status = exec_word(words.cmds[tcmds]);
+                    break;
+                case PIPE:
+                    // TODO 
+                    break;
+                case redirect_in:
+                    // TODO 
+                    break;
+                case redirect_out:
+                    // TODO 
+                    break;
+                case redirect_out_append:
+                    // TODO 
+                    break;
+                default:
+                    // nothing
+                    break;
+            }
+        }
+    }
+        return shell_status ;
+}
+
 /* Execute a command */
 int exec_word(Command command) {
     pid_t child_pid ;

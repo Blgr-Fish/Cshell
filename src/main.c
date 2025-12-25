@@ -71,19 +71,8 @@ void loop() {
         // turning line into multiple commands & arguments
         words = parse_line(line) ;
         
-        // executing all the commands with their args if they have some
-        for (int tcmds = 0 ; tcmds < words.totalcmds ; ++tcmds) {
-            if (words.cmds[tcmds].argv[0] != NULL) {
-                if (tcmds == 0 
-                    || shell_status == SHELL_VALID 
-                    || words.cmds[tcmds-1].ended != 1 ) {
-                        
-                        shell_status = exec_word(words.cmds[tcmds]);
-                    }
-                } else {
-                    shell_status = shell_status; // useless
-                }
-        }
+        // handle commands depending on their ending & the last status
+        shell_status = handle_command(words, shell_status);
             
         
         // freeing memory
