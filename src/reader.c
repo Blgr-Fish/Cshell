@@ -136,7 +136,7 @@ char * add_spaces(char * buffer) {
 
     int ci = 0 ;
     
-    char * clean_line = malloc(2*strlen(buffer)+1);
+    char * clean_line = malloc(3*strlen(buffer)+1);
 
     size_t sbuffer = strlen(buffer);
 
@@ -149,7 +149,7 @@ char * add_spaces(char * buffer) {
             clean_line[ci++] = buffer[i];
             clean_line[ci++] = buffer[i+1];
             clean_line[ci++] = ' ';
-            i++; 
+            i++;                    // not count the second & else it with goes to the "else" brand, adding to many &s
         }
         else if (buffer[i] == ';' || buffer[i] == '>' || buffer[i] == '<' || buffer[i] == '&' || buffer[i] == '|') {
             clean_line[ci++] = ' ';

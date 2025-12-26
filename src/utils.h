@@ -6,7 +6,7 @@
 #define BUFFER_SIZE 1024 
 #define TOKEN_DELIMITER " \t" // set of delimiters
 #define MAX_CMDS 10
-#define HISTORY_SIZE 100
+#define HISTORY_SIZE 1000 // default history size
 
 #define DELETE_CHAR 127
 #define ESC_CHAR 27
@@ -49,6 +49,7 @@ typedef struct {
     char** lines;
     int total_lines;
     int current_line; // for navigating through history
+    int capacity ;
   } History ;
 
 void print_words(Line words);

@@ -5,6 +5,7 @@
 Line parse_line( char * line) {
     int buffer_size = BUFFER_SIZE ;
     int position = 0 ;
+    int flag = 0;
 
     char * t ;
     //char ** tokens = malloc(sizeof(char*) * buffer_size);
@@ -23,8 +24,9 @@ Line parse_line( char * line) {
     t = strtok(line, TOKEN_DELIMITER) ;
     while (t != NULL) {
 
+        if (flag == 0 ) {
 
-        if (strcmp(t, ";") == 0 || strcmp(t, "&&") == 0 || strcmp(t,"||") == 0 || strcmp(t,">") == 0 || strcmp(t,">>") == 0) {
+            if (strcmp(t, ";") == 0 || strcmp(t, "&&") == 0 || strcmp(t,"||") == 0 || strcmp(t,">") == 0 || strcmp(t,">>") == 0) {
 
             if (strcmp(t, "&&") == 0) {
                 pline.cmds[pline.totalcmds].ended = AND_AND ;// && code
@@ -62,32 +64,32 @@ Line parse_line( char * line) {
                 }
             } else { 
                 fprintf(stderr, "error: parse error  near %s\n", t);
-                pline.totalcmds = -1 ;
-                return pline ;
+                flag = -1 ;
             }
             
 
             
-        } else {
-            // so we can free argv later 
-            pline.cmds[pline.totalcmds].argv[position++] = strdup(t) ;
-
-             
-        }
-        
-        if (position >= buffer_size) {
-            buffer_size += BUFFER_SIZE ;
-            pline.cmds[pline.totalcmds].argv = realloc(pline.cmds[pline.totalcmds].argv,sizeof(char * )* buffer_size);
-
-            if (!pline.cmds[pline.totalcmds].argv) {
-                fprintf(stderr, "error: Allocation error\n");
-                exit(EXIT_FAILURE);
+            } else {
+                // so we can free argv later 
+                pline.cmds[pline.totalcmds].argv[position++] = strdup(t) ;
+       
             }
+            
+            if (position >= buffer_size) {
+                buffer_size += BUFFER_SIZE ;
+                pline.cmds[pline.totalcmds].argv = realloc(pline.cmds[pline.totalcmds].argv,sizeof(char * )* buffer_size);
+
+                if (!pline.cmds[pline.totalcmds].argv) {
+                    fprintf(stderr, "error: Allocation error\n");
+                    exit(EXIT_FAILURE);
+                }
+            }
+
         }
 
         t = strtok(NULL, TOKEN_DELIMITER);
-
     }
+
 
     // to ensure the end of the word
     pline.cmds[pline.totalcmds].argv[position] = NULL ;

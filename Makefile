@@ -4,7 +4,7 @@ TARGET = bin/main.out
 SRCS = $(wildcard src/*.c)
 
 CC = gcc
-CFLAGS = -Wall -Wextra -g
+CFLAGS = -Wall -Wextra -g -fsanitize=address
 
 all: $(TARGET)
 

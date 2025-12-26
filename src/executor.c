@@ -9,9 +9,16 @@ int handle_command(Line words, int last_status){
     for (int tcmds = 0 ; tcmds < words.totalcmds ; ++tcmds) {
 
         if ( words.cmds[tcmds].argv[0] != NULL) {
+
             if ((words.cmds[tcmds].ended == REDIRECT_OUT || words.cmds[tcmds].ended == REDIRECT_OUT_APPEND)) {
                 continue ;
-            } else {
+            } 
+            else if (tcmds == 0) {
+                shell_status = exec_word(words.cmds[tcmds]);
+                continue;
+            }
+
+           else {
                 switch (words.cmds[tcmds-1].ended) {
                     case SEMICOLON:
                         shell_status = exec_word(words.cmds[tcmds]);

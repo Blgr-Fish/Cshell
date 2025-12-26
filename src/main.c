@@ -3,12 +3,9 @@
 #include "parser.h"
 #include "reader.h"
 
-/* Initialize history */
-void init_history() {
-    history.lines = malloc(sizeof(char*) * HISTORY_SIZE);
-    history.total_lines = 0;
-    history.current_line = 0 ;
-}
+
+
+
 
 /* Add a command to the history file. Used at the end of each command */
 void add_to_history(char * cmd) {
@@ -35,14 +32,64 @@ void add_to_history(char * cmd) {
 
 }
 
+void from_history(){
+    
+    char * home = getenv("HOME");
+    if (!home) {
+        printf("error: home directory doesn't exist\n");
+        return ;
+    }
+
+    char home_history[BUFFER_SIZE];
+    snprintf(home_history, sizeof(home_history), "%s/%s", home, HISTORY_FILE);
+    
+    FILE *fptr = fopen(home_history,"r");
+
+    if (!fptr) {
+        perror("fopen");
+        return;
+    }
+
+    char command[BUFFER_SIZE];
+
+    while(fgets(command, BUFFER_SIZE, fptr)) {
+            //printf("%s\n",command);
+
+
+            if(history.total_lines >= history.capacity ) {;
+                history.capacity += HISTORY_SIZE ;
+                history.lines = realloc(history.lines, history.capacity * sizeof(char *));
+            }
+
+            command[strcspn(command, "\n")] = '\0';
+            history.lines[history.total_lines++] = strdup(command);
+            history.current_line = history.total_lines-1 ;
+
+    }
+
+}
+
+/* Initialize history */
+void init_history() {
+    history.lines = malloc(sizeof(char*) * HISTORY_SIZE);
+    history.total_lines = 0;
+    history.current_line = 0 ;
+    history.capacity = HISTORY_SIZE ;
+
+   from_history();
+
+   printf("voici capacité :%d\n", history.capacity);
+   printf("voici total_lines :%d\n", history.total_lines);
+}
+
 
 /* Loop to read and execute commands */
 void loop() {
     char * line ;
     Line words ; // parsed line
     int shell_status = SHELL_VALID ; // last command status 
-
     // create in-memory History datastructure
+    
     init_history();
     
     int w_size = 1024 ;
@@ -91,6 +138,12 @@ void loop() {
         // free the all commands pointer
 
         if (strlen(old_line) > 0){
+
+            if(history.total_lines >= history.capacity ) {;
+                history.capacity += HISTORY_SIZE ;
+                history.lines = realloc(history.lines, history.capacity * sizeof(char *));
+            }
+
             history.lines[history.total_lines++] = strdup(old_line);
             history.current_line = history.total_lines-1 ;
         }
@@ -100,7 +153,9 @@ void loop() {
         
     } while (shell_status != SHELL_EXIT) ;
 
-    free(history.lines);
+    for (int i = 0 ; i < history.total_lines ; ++i){
+        free(history.lines[i]);
+    } free(history.lines);
 
 }
 
