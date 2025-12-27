@@ -1,6 +1,5 @@
 #include "executor.h"
 
-
 int handle_command(Line words, int last_status){
 
     int shell_status = last_status ;
@@ -56,6 +55,11 @@ int handle_command(Line words, int last_status){
 
 /* Execute a command */
 int exec_word(Command command) {
+
+    
+    struct sigaction sa;
+    memset(&sa, 0, sizeof sa);
+
     pid_t child_pid ;
     int exec_status ;
 
@@ -82,12 +86,17 @@ int exec_word(Command command) {
         fprintf(stderr, "error: process creation error\n");
         return SHELL_ERROR;
     } else {
-        waitpid(child_pid, &exec_status, 0) ; // 0 since we don't need any option for now
-        if (WIFEXITED(exec_status)) {
-            return WEXITSTATUS(exec_status) ;
-        }
-
-            
+        if (command.background == 0) {
+            waitpid(child_pid, &exec_status, 0) ; // 0 since we don't need any option for now
+            if (WIFEXITED(exec_status)) {
+                return WEXITSTATUS(exec_status) ;
+            }
+        }  else {
+            sa.sa_handler = &ZombieHandler;
+            sigaction(SIGCHLD, &sa, NULL);  // set sa as sigaction when SIGCHLD signal occurs
+            printf("[-] %d in background\n", child_pid);
+            return SHELL_VALID ;
+        } 
     }
     
     return SHELL_ERROR ;
@@ -166,4 +175,18 @@ int  write_to_file(char * type, int shell_status, Line words, int tcmds) {
     }
 
     return shell_status ;
+}
+
+
+void ZombieHandler(int signal_num) 
+{
+    pid_t pid ;
+    char buf[64] ;
+    int len ;
+    
+    while ((pid = waitpid(-1, NULL, WNOHANG)) > 0){
+        len = snprintf(buf, sizeof(buf), "[-] %d terminated\n", pid);
+        write(STDOUT_FILENO, buf, len);
+    }
+    
 }

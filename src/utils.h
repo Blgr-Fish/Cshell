@@ -28,7 +28,7 @@
 #define REDIRECT_OUT 5 // >
 #define REDIRECT_OUT_APPEND 6 // >>
 
-#define AND_BACKGROUND 1 // for background processes &
+#define BACKGROUND 1 // for background processes &
 
 
 
@@ -37,6 +37,7 @@
 typedef struct  {
     char ** argv;
     int ended; 
+    int background;
 } Command ;
 
 /* line of multiple commands, needed for ; usage & maybe more after */
@@ -53,6 +54,8 @@ typedef struct {
   } History ;
 
 void print_words(Line words);
+
+
 
 extern History history ;
 

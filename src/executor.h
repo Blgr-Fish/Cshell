@@ -14,5 +14,6 @@ int exec_history();
 void replace_tild(char ** argv);
 int handle_command(Line line, int last_status);
 int write_to_file(char * type, int shell_status, Line words, int tcmds);
+void ZombieHandler(int signal_num) ;
 
 #endif
