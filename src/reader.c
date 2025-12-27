@@ -51,7 +51,7 @@ char * read_line() {
         }else if (c == ESC_CHAR) {
             
             // arrows are composed of 3 bytes, so we need to take of the 2 next chars
-            char seq1 = getchar();
+            getchar();
             char seq2 = getchar();
                  
             switch (seq2) {

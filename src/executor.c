@@ -45,9 +45,6 @@ int handle_command(Line words, int last_status){
                         break;
                     default:
                         shell_status = exec_word(words.cmds[tcmds]);
-                        /*printf("here " ) ;
-                        printf("executing command : %s\n", words.cmds[tcmds].argv[0] ) ;
-                        printf("total commds :  %d\n", words.totalcmds) ;*/
                         break;
                 }
             }
@@ -87,7 +84,6 @@ int exec_word(Command command) {
     } else {
         waitpid(child_pid, &exec_status, 0) ; // 0 since we don't need any option for now
         if (WIFEXITED(exec_status)) {
-            //printf("exec_status = %d\n", WEXITSTATUS(exec_status));
             return WEXITSTATUS(exec_status) ;
         }
 

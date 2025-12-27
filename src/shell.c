@@ -46,8 +46,6 @@ void from_history(){
     char command[BUFFER_SIZE];
 
     while(fgets(command, BUFFER_SIZE, fptr)) {
-            //printf("%s\n",command);
-
 
             if(history.total_lines >= history.capacity ) {;
                 history.capacity += HISTORY_SIZE ;
@@ -68,11 +66,8 @@ void init_history() {
     history.total_lines = 0;
     history.current_line = 0 ;
     history.capacity = HISTORY_SIZE ;
+    from_history();
 
-   from_history();
-
-   printf("voici capacité :%d\n", history.capacity);
-   printf("voici total_lines :%d\n", history.total_lines);
 }
 
 

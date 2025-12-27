@@ -8,7 +8,6 @@ Line parse_line( char * line) {
     int flag = 0;
 
     char * t ;
-    //char ** tokens = malloc(sizeof(char*) * buffer_size);
     Line pline;
     pline.cmds = malloc(sizeof(Command) * MAX_CMDS);
     pline.totalcmds = 0 ;
