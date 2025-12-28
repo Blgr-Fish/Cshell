@@ -133,16 +133,20 @@ int exec_exit() {
 int exec_cd(char ** words) {
 
     int status = SHELL_VALID ;
+    char * d ;
     
     if (words[1] == NULL) {
-        words[1] = strdup(getenv("HOME")) ;
+        d = strdup(getenv("HOME"));
+        
+    } else {
+        d = strdup(words[1]);
     }
-    
-    if (chdir(words[1]) != 0) {
-        printf("error: directory doesn't exist : %s\n", words[1]);
+
+    if (chdir(d) != 0) {
+        printf("error: directory doesn't exist : %s\n", d);
         status = SHELL_ERROR ;
     }
-    
+    free(d);
     return status ;
 }
 

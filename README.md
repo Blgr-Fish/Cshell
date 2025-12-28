@@ -4,16 +4,13 @@ RogerLux (`rsh`) is a mini Unix shell implemented in C. It reads user commands, 
 
 ## Table of Contents
 
-- Features[##features]
-- Getting Starded Getting Started getting−started
-- Installation #installation
-- Usage #usage
-- Examples #examples
-- Built-in-Commands #built−in−commands
-- Implementation Details#implementation−details
-- Authors #authors
-- Licence #license
-- Acknowledgements #acknowledgments
+- [Features](##features)
+- [Getting Starded](##Getting-Started)
+- [Installation](###Installation)
+- [Usage](##Usage)
+- [Examples](##Examples)
+- [Implementation Details](##Implementation-Details)
+- [Acknowledgements](##Acknowledgments)
 
 ## Features
 
@@ -40,7 +37,7 @@ RogerLux (`rsh`) is a mini Unix shell implemented in C. It reads user commands, 
  - Tokenizes input considering spaces and special characters.
  - Supports `~` expansion for home directory.
 
-## Getting Started
+## Getting-Started
 
 ### Prerequisites
 
@@ -132,7 +129,7 @@ I/O redirection
 "Again"
 ```
 
-## Implementation Details
+## Implementation-Details
 
 - **Processes**
  - Forks a child for each external command.
@@ -148,6 +145,8 @@ I/O redirection
 - **History**
  - Stored in memory and persistent file.
  - Implemented as dynamic array, navigable with arrow keys.
+
+
 ## Version
 
 - 1.0.0
