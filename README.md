@@ -4,13 +4,13 @@ RogerLux (`rsh`) is a mini Unix shell implemented in C. It reads user commands, 
 
 ## Table of Contents
 
-- [Features](##features)
-- [Getting Starded](##Getting-Started)
-- [Installation](###Installation)
-- [Usage](##Usage)
-- [Examples](##Examples)
-- [Implementation Details](##Implementation-Details)
-- [Acknowledgements](##Acknowledgments)
+- [Features](#features)
+- [Getting Starded](#getting-started)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Examples](#examples)
+- [Implementation Details](#implementation-details)
+- [Acknowledgements](#acknowledgments)
 
 ## Features
 
