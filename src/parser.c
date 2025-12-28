@@ -27,7 +27,7 @@ Line parse_line( char * line) {
 
             pline.cmds[pline.totalcmds].background = 0 ;
 
-            if (strcmp(t, ";") == 0 || strcmp(t,"&") == 0|| strcmp(t, "&&") == 0 || strcmp(t,"||") == 0 || strcmp(t,">") == 0 || strcmp(t,">>") == 0) {
+            if (strcmp(t, ";") == 0 || strcmp(t,"&") == 0|| strcmp(t, "&&") == 0 || strcmp(t,"||") == 0 || strcmp(t,">") == 0 || strcmp(t,">>") == 0 || strcmp(t,"<") == 0) {
 
             if (strcmp(t, "&&") == 0) {
                 pline.cmds[pline.totalcmds].ended = AND_AND ;// && code
@@ -37,6 +37,8 @@ Line parse_line( char * line) {
                 pline.cmds[pline.totalcmds].ended = REDIRECT_OUT ;
             } else if(strcmp(t,">>") == 0) {
                 pline.cmds[pline.totalcmds].ended = REDIRECT_OUT_APPEND ;
+            } else if(strcmp(t,"<") == 0) {
+                pline.cmds[pline.totalcmds].ended = REDIRECT_IN ;
             } else {
                 if (strcmp(t,"&") == 0 ){
                     pline.cmds[pline.totalcmds].background = 1 ;

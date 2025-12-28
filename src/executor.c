@@ -9,7 +9,7 @@ int handle_command(Line words, int last_status){
 
         if ( words.cmds[tcmds].argv[0] != NULL) {
 
-            if ((words.cmds[tcmds].ended == REDIRECT_OUT || words.cmds[tcmds].ended == REDIRECT_OUT_APPEND)) {
+            if ((words.cmds[tcmds].ended == REDIRECT_OUT || words.cmds[tcmds].ended == REDIRECT_OUT_APPEND || words.cmds[tcmds].ended == REDIRECT_IN)) {
                 continue ;
             } 
             else if (tcmds == 0) {
@@ -34,7 +34,7 @@ int handle_command(Line words, int last_status){
                         // TODO 
                         break;
                     case REDIRECT_IN: // <
-                        // TODO 
+                        shell_status = file_to_stdin( shell_status, words, tcmds);
                         break;
                     case REDIRECT_OUT:
                         shell_status = write_to_file("w", shell_status, words, tcmds);
@@ -160,27 +160,47 @@ int exec_history() {
     return SHELL_VALID;
 }
 
-
+// >, >>
 int  write_to_file(char * type, int shell_status, Line words, int tcmds) {
-    if (shell_status == SHELL_VALID) {
+    FILE * inputFile = fopen(words.cmds[tcmds].argv[0], type) ;
+    if ( !inputFile ) {
+        printf( "error; no such file or directory: %s\n", words.cmds[tcmds].argv[0]);
+        shell_status = SHELL_ERROR ;
+    } else {
         int  stdout_bk = dup(fileno(stdout));
-        FILE * inputFile = fopen(words.cmds[tcmds].argv[0], type) ;
-        if ( !inputFile ) {
-            printf( "error; file not found for redirection");
-            shell_status = SHELL_ERROR ;
-        } else {
-            dup2(fileno(inputFile), fileno(stdout));
-                                
-            shell_status = exec_word(words.cmds[tcmds-1]);
-                                
-            dup2(stdout_bk, fileno(stdout));
-            close(stdout_bk);
-        }
+        dup2(fileno(inputFile), fileno(stdout));
+        
+        shell_status = exec_word(words.cmds[tcmds-1]);
+        
+        dup2(stdout_bk, fileno(stdout));
+        close(stdout_bk);
+        fclose(inputFile);
     }
-
+    
     return shell_status ;
 }
 
+// <
+int file_to_stdin(int shell_status, Line words, int tcmds) {
+    
+    FILE * inputFile = fopen(words.cmds[tcmds].argv[0], "r") ;
+    if ( !inputFile ) {
+        printf( "error; no such file or directory: %s\n", words.cmds[tcmds].argv[0]);
+        shell_status = SHELL_ERROR ;
+    } else {
+        int  stdin_bk = dup(fileno(stdin));
+        dup2(fileno(inputFile), fileno(stdin));
+        
+        shell_status = exec_word(words.cmds[tcmds-1]);
+        
+        dup2(stdin_bk, fileno(stdin));
+        close(stdin_bk);
+        fclose(inputFile);
+    }
+    
+    return shell_status ;
+
+}
 
 void ZombieHandler(int signal_num) 
 {
