@@ -60,7 +60,7 @@ char * read_line() {
                     if (history.lines[0]) {
                         
                         int c_line = --history.current_line;
-                        printf("c_line = %d\n", c_line);
+                        //printf("c_line = %d\n", c_line);
                         if (c_line <= 0 ){
                             c_line = 0 ; 
                             history.current_line = c_line ;
@@ -89,7 +89,7 @@ char * read_line() {
                     if (history.lines[0]) {
 
                         int c_line = ++history.current_line;
-                        printf("c_line = %d\n", c_line);
+                        //printf("c_line = %d\n", c_line);
                         if (c_line >= history.total_lines ){
                             c_line = max(history.total_lines-1,0) ; 
                             history.current_line = c_line ;
@@ -175,3 +175,4 @@ void test_buffer_error(char * buffer){
         exit(EXIT_FAILURE);
     }
 }
+
