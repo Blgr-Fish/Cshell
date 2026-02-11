@@ -58,53 +58,59 @@ char * read_line() {
                 case 'A': // up
 
                     if (history.lines[0]) {
-
-                        int c_line = history.current_line-- ;
+                        
+                        int c_line = --history.current_line;
+                        printf("c_line = %d\n", c_line);
                         if (c_line <= 0 ){
                             c_line = 0 ; 
-                            history.current_line = 0 ;
-                        } 
-                            
-                        char * old_command = history.lines[c_line] ;
-                        int old_size = strlen(old_command);
+                            history.current_line = c_line ;
+                        } else{
+                            char * old_command = history.lines[c_line] ;
+                            int old_size = strlen(old_command);
 
-                        if (old_size + 1 > buffer_size ) {
-                            buffer_size += BUFFER_SIZE + 1 ;
+                            if (old_size + 1 > buffer_size ) {
+                                buffer_size += BUFFER_SIZE + 1 ;
+                            }
+
+                            buffer = realloc(buffer, buffer_size);
+                            test_buffer_error(buffer);
+                            strcpy(buffer,old_command);
+                            position = old_size;
+
+                            printf("\r\33[2K╰─>%s",old_command);
+                            fflush(stdout);  
                         }
-
-                        buffer = realloc(buffer, buffer_size);
-                        test_buffer_error(buffer);
-                        strcpy(buffer,old_command);
-                        position = old_size;
-
-                        printf("\r\33[2K╰─>%s",old_command);
-                        fflush(stdout);  
+                        
+                        
                     }
                     break;
                 case 'B': // down
 
                     if (history.lines[0]) {
 
-                        int c_line = history.current_line++ ;
+                        int c_line = ++history.current_line;
+                        printf("c_line = %d\n", c_line);
                         if (c_line >= history.total_lines ){
-                            c_line = history.total_lines-1 ; 
-                            history.current_line = history.total_lines-1 ;
-                        } 
-                            
-                        char * old_command = history.lines[c_line] ;
-                        int old_size = strlen(old_command);
+                            c_line = max(history.total_lines-1,0) ; 
+                            history.current_line = c_line ;
+                        } else  {
+                            char * old_command = history.lines[c_line] ;
+                            int old_size = strlen(old_command);
 
-                        if (old_size + 1 > buffer_size ) {
-                            buffer_size += BUFFER_SIZE + 1 ;
+                            if (old_size + 1 > buffer_size ) {
+                                buffer_size += BUFFER_SIZE + 1 ;
+                            }
+
+                            buffer = realloc(buffer, buffer_size);
+                            test_buffer_error(buffer);
+                            strcpy(buffer,old_command);
+                            position = old_size;
+
+                            printf("\r\33[2K╰─>%s",old_command);
+                            fflush(stdout);  
                         }
+                            
 
-                        buffer = realloc(buffer, buffer_size);
-                        test_buffer_error(buffer);
-                        strcpy(buffer,old_command);
-                        position = old_size;
-
-                        printf("\r\33[2K╰─>%s",old_command);
-                        fflush(stdout);  
                     }
                     break;
                 case 'C': // right
